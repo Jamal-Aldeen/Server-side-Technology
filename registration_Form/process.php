@@ -1,12 +1,10 @@
 <?php
 $filename = "users.txt";
 
-// Create file if it doesn't exist
 if (!file_exists($filename)) {
     file_put_contents($filename, '');
 }
 
-// Load existing records
 $records = [];
 if (file_exists($filename)) {
     $lines = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
@@ -18,12 +16,10 @@ if (file_exists($filename)) {
     }
 }
 
-// Handle DELETE request
 if (isset($_GET['delete'])) {
     $id = (int)$_GET['delete'];
     if (isset($records[$id])) {
         unset($records[$id]);
-        // Save remaining records (one per line)
         $lines = [];
         foreach ($records as $record) {
             $lines[] = json_encode($record);
@@ -34,7 +30,6 @@ if (isset($_GET['delete'])) {
     exit();
 }
 
-// Handle POST request (new registration)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newRecord = [
         'firstname' => $_POST['firstname'],
@@ -48,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'department' => $_POST['department']
     ];
 
-    // Append new record as a new line
     file_put_contents($filename, json_encode($newRecord, JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
     header("Location: display.php");
     exit();

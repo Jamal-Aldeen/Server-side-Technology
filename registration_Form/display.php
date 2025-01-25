@@ -1,12 +1,10 @@
 <?php
 $filename = "users.txt";
 
-// Create file if it doesn't exist
 if (!file_exists($filename)) {
     file_put_contents($filename, '');
 }
 
-// Load records
 $records = [];
 if (file_exists($filename)) {
     $lines = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
@@ -18,7 +16,6 @@ if (file_exists($filename)) {
     }
 }
 
-// Handle DELETE request (same as process.php)
 if (isset($_GET['delete'])) {
     $id = (int)$_GET['delete'];
     if (isset($records[$id])) {

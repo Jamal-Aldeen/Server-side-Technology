@@ -7,12 +7,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <?php
-    if (isset($_GET['error'])) {
-        $error = urldecode($_GET['error']);
-        echo "<p style='color: red; text-align: center;'>Error: $error</p>";
-    }
-    ?>
     <div class="form-container">
         <h2>Registration Form</h2>
         <form action="process.php" method="POST" onsubmit="return validateForm()">
@@ -27,7 +21,7 @@
             <label for="address">Address:</label>
             <input type="text" id="address" name="address">
             <div class="error" id="address_error"></div>
-            
+
             <label for="country">Country:</label>
             <select id="country" name="country">
                 <option value="">--Select Country--</option>
