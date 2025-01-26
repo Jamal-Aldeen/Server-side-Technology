@@ -1,0 +1,66 @@
+<?php
+session_start();
+
+// Redirect to welcome page if user is already logged in
+if (isset($_SESSION['user'])) {
+    header('Location: welcome.php');
+    exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
+
+    // Read user data from file
+    $users = file('users.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    
+    foreach ($users as $user_json) {
+        $user = json_decode($user_json, true);
+        if ($user['email'] === $email && password_verify($password, $user['password'])) {
+            // Login successful
+            $_SESSION['user'] = $user;
+            header('Location: welcome.php');
+            exit();
+        }
+    }
+
+    // Login failed
+    $_SESSION['error'] = "Invalid email or password";
+    header('Location: login.php');
+    exit();
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Login</h2>
+        
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="error-box">
+                <p><?= htmlspecialchars($_SESSION['error']) ?></p>
+            </div>
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+
+        <form action="login.php" method="POST">
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" name="password" required>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? <a href="register.php">Register here</a></p>
+    </div>
+</body>
+</html>
