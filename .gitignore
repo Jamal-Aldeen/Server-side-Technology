@@ -1,0 +1,46 @@
+index.php
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE-specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Ignore Composer dependencies
+/vendor/
+
+# Ignore environment files
+.env
+.env.local
+.env.*.local
+
+# Ignore log files
+*.log
+logs/
+
+# Ignore cache files
+cache/
+*.cache
+
+# Ignore uploaded files
+/uploads/
+
+# Ignore compiled files
+*.compiled.php
+
+# Ignore local configuration files
+/config/local.php
+
+# Ignore node_modules (if you have frontend dependencies)
+/node_modules/
+
+# Ignore build directories
+/build/
+/dist/
+
+# Ignore system files
+*.bak
+*.tmp
