@@ -10,17 +10,30 @@ if (!isset($_SESSION['admin'])) {
 // Handle user deletion
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
     $email = $_POST['email'];
+
+    // Read all users from the file
     $users = file('users.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-    // Filter out the user to delete
-    $users = array_filter($users, function($user_json) use ($email) {
+    // Find the user to delete
+    foreach ($users as $key => $user_json) {
         $user = json_decode($user_json, true);
-        return $user['email'] !== $email;
-    });
+        if ($user['email'] === $email) {
+            // Delete the user's photo file
+            if (file_exists($user['profile_pic'])) {
+                unlink($user['profile_pic']); // Delete the file
+            }
 
-    // Save updated users list
+            // Remove the user from the array
+            unset($users[$key]);
+            break;
+        }
+    }
+
+    // Save the updated users list back to the file
     file_put_contents('users.txt', implode(PHP_EOL, $users));
-    $_SESSION['message'] = "User deleted successfully";
+
+    // Set a success message
+    $_SESSION['message'] = "User and their photo deleted successfully";
     header('Location: admin.php');
     exit();
 }
@@ -66,9 +79,9 @@ $users = file('users.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
                         <td><?= htmlspecialchars($user['room']) ?></td>
                         <td><img src="<?= htmlspecialchars($user['profile_pic']) ?>" alt="Profile Picture" class="profile-img"></td>
                         <td>
-                            <form action="admin.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                            <form action="admin.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this user and their photo?');">
                                 <input type="hidden" name="email" value="<?= htmlspecialchars($user['email']) ?>">
-                                <button type="submit" name="delete">Delete</button>
+                                <button type="submit" name="delete" class="delete-btn">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -80,4 +93,3 @@ $users = file('users.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     </div>
 </body>
 </html>
-
