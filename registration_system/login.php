@@ -1,23 +1,22 @@
 <?php
 session_start();
 
-// Redirect to welcome page if user is already logged in
-if (isset($_SESSION['user'])) {
-    header('Location: welcome.php');
-    exit();
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    // Read user data from file
+    // Admin login
+    if ($email === 'admin@gmail.com' && $password === 'admin') {
+        $_SESSION['admin'] = true;
+        header('Location: admin.php');
+        exit();
+    }
+
+    // Regular user login
     $users = file('users.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    
     foreach ($users as $user_json) {
         $user = json_decode($user_json, true);
         if ($user['email'] === $email && password_verify($password, $user['password'])) {
-            // Login successful
             $_SESSION['user'] = $user;
             header('Location: welcome.php');
             exit();

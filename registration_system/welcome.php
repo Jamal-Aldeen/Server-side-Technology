@@ -22,7 +22,7 @@ $user = $_SESSION['user'];
         <div class="user-info">
             <p>Email: <?= htmlspecialchars($user['email']) ?></p>
             <p>Room: <?= htmlspecialchars($user['room']) ?></p>
-            <p>Extension: <?= htmlspecialchars($user['ext']) ?></p>
+            <p>Username: <?= htmlspecialchars($user['username']) ?></p>
         </div>
         <a href="logout.php" class="logout-btn">Logout</a>
     </div>

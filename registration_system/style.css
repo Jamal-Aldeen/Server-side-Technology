@@ -11,6 +11,7 @@ body {
     min-height: 100vh;
 }
 
+
 .welcome-container, .form-container {
     background: linear-gradient(135deg, #1f2a48, #2a3a5e);
     padding: 40px;
@@ -18,10 +19,11 @@ body {
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
     width: 100%;
     max-width: 500px;
-    animation: pulse 3s infinite;
     border: 1px solid #33415c;
     text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
 
 @keyframes pulse {
     0%, 100% { transform: scale(1); }
@@ -34,6 +36,7 @@ h1, h2 {
     margin-bottom: 25px;
     letter-spacing: 1px;
     text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
 }
 
 .form-group {
@@ -64,12 +67,12 @@ input, select {
 
 input:focus, select:focus {
     border-color: #007bff;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.6);
+    box-shadow: 0 0 12px rgba(0, 123, 255, 0.6);
 }
 
 button, .btn {
     display: block;
-    width: 100%;
+    width: 98%;
     padding: 14px;
     margin-top: 20px;
     background: linear-gradient(90deg, #007bff, #0056b3);
@@ -98,6 +101,19 @@ button:hover, .btn:hover {
     border-radius: 8px;
     padding: 15px;
     margin-bottom: 20px;
+    animation: shake 0.5s ease;
+}
+.error{
+color: red;
+animation: shake 0.5s ease;
+padding-top: 5px;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
 }
 
 .error-box p {
@@ -114,6 +130,12 @@ button:hover, .btn:hover {
     object-fit: cover;
     border: 2px solid #007bff;
     margin-bottom: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px rgba(0, 123, 255, 0.6);
 }
 
 .user-info {
@@ -121,9 +143,98 @@ button:hover, .btn:hover {
     margin: 20px 0;
 }
 
+.user-info p {
+    margin: 10px 0;
+    font-size: 1rem;
+    color: #c0c0c0;
+    transition: color 0.3s ease;
+}
+
+.user-info p:hover {
+    color: #007bff;
+}
+
 .logout-btn {
     display: inline-block;
     width: auto;
     padding: 10px 20px;
     margin-top: 20px;
+    background: linear-gradient(90deg, #ff6347, #ff4500);
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s;
+}
+
+.logout-btn:hover {
+    background: linear-gradient(90deg, #ff4500, #ff0000);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(255, 69, 0, 0.4);
+}
+
+/* Admin Panel Styles */
+.admin-container {
+    background: linear-gradient(135deg, #1f2a48, #2a3a5e);
+    padding: 40px;
+    border-radius: 30px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 800px;
+    border: 1px solid #33415c;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #33415c;
+}
+
+th {
+    background-color: #1f2a48;
+    color: #007bff;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+td {
+    color: #c0c0c0;
+}
+
+tr:hover {
+    background-color: #33415c;
+    transition: background-color 0.3s ease;
+}
+
+.delete-btn {
+    background: linear-gradient(90deg, #ff6347, #ff4500);
+    color: #fff;
+    border: none;
+    border-radius: 15px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s;
+}
+
+.delete-btn:hover {
+    background: linear-gradient(90deg, #ff4500, #ff0000);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(255, 69, 0, 0.4);
 }
