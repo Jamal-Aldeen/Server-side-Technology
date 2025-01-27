@@ -1,8 +1,7 @@
 <?php
 session_start();
 
-// Define the secret key directly in the file
-define('SECRET_KEY', 'd4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4'); // Replace with your generated key
+define('SECRET_KEY', 'd4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4'); 
 
 // Define allowed file types and max file size
 $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
@@ -11,7 +10,6 @@ $max_size = 2 * 1024 * 1024; // 2MB
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = [];
 
-    // Validate inputs
     $name = trim($_POST['name'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -19,42 +17,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $room = $_POST['room'] ?? '';
     $username = trim($_POST['username'] ?? '');
 
-    // Name validation
     if (empty($name)) {
         $errors['name'] = "Name is required";
     }
 
-    // Email validation
     if (empty($email)) {
         $errors['email'] = "Email is required";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors['email'] = "Invalid email format";
     }
 
-    // Password validation
     if (empty($password)) {
         $errors['password'] = "Password is required";
     } elseif (strlen($password) !== 8 || !preg_match('/^[a-z0-9_]+$/', $password)) {
         $errors['password'] = "Password must be 8 characters, lowercase, numbers, or underscores only";
     }
 
-    // Confirm password
     if ($password !== $confirm_password) {
         $errors['confirm_password'] = "Passwords do not match";
     }
 
-    // Room validation
     $valid_rooms = ['Application1', 'Application2', 'Cloud'];
     if (empty($room) || !in_array($room, $valid_rooms)) {
         $errors['room'] = "Invalid room selection";
     }
 
-    // Username validation
     if (empty($username)) {
         $errors['username'] = "Username is required";
     }
 
-    // Profile picture validation
     if (!isset($_FILES['profile_pic']) || $_FILES['profile_pic']['error'] === UPLOAD_ERR_NO_FILE) {
         $errors['profile_pic'] = "Profile picture is required";
     } else {
@@ -70,9 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // If no errors, proceed with saving data
     if (empty($errors)) {
-        // Handle file upload
         $upload_dir = 'uploads/';
         if (!is_dir($upload_dir)) {
             mkdir($upload_dir, 0755, true);
@@ -83,24 +72,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $destination = $upload_dir . $filename;
 
         if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], $destination)) {
-            // Hash the password with the secret key
             $hashed_password = hash_hmac('sha256', $password, SECRET_KEY);
 
-            // Prepare user data
             $user_data = [
                 'name' => htmlspecialchars($name),
                 'email' => filter_var($email, FILTER_SANITIZE_EMAIL),
-                'password' => $hashed_password, // Store the hashed password
+                'password' => $hashed_password, 
                 'room' => $room,
                 'username' => htmlspecialchars($username),
                 'profile_pic' => $destination
             ];
 
-            // Save user data to file
             $user_json = json_encode($user_data) . PHP_EOL;
             file_put_contents('users.txt', $user_json, FILE_APPEND | LOCK_EX);
 
-            // Clear session data and redirect
             unset($_SESSION['errors'], $_SESSION['old']);
             header('Location: login.php');
             exit();
@@ -109,7 +94,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // If there are errors, store them in session
     $_SESSION['errors'] = $errors;
     $_SESSION['old'] = $_POST;
     header('Location: register.php');
@@ -127,7 +111,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h2>Registration Form</h2>
         
         <form action="register.php" method="POST" enctype="multipart/form-data">
-            <!-- Name Field -->
             <div class="form-group">
                 <label>Name:</label>
                 <input type="text" name="name" value="<?= htmlspecialchars($_SESSION['old']['name'] ?? '') ?>">
@@ -136,7 +119,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
             </div>
 
-            <!-- Email Field -->
             <div class="form-group">
                 <label>Email:</label>
                 <input type="email" name="email" value="<?= htmlspecialchars($_SESSION['old']['email'] ?? '') ?>">
@@ -145,7 +127,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
             </div>
 
-            <!-- Password Field -->
             <div class="form-group">
                 <label>Password:</label>
                 <input type="password" name="password">
@@ -154,7 +135,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
             </div>
 
-            <!-- Confirm Password Field -->
             <div class="form-group">
                 <label>Confirm Password:</label>
                 <input type="password" name="confirm_password">
@@ -163,7 +143,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
             </div>
 
-            <!-- Room Field -->
             <div class="form-group">
                 <label>Room No.:</label>
                 <select name="room">
@@ -177,7 +156,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
             </div>
 
-            <!-- Username Field -->
             <div class="form-group">
                 <label>Username:</label>
                 <input type="text" name="username" value="<?= htmlspecialchars($_SESSION['old']['username'] ?? '') ?>">
@@ -186,7 +164,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
             </div>
 
-            <!-- Profile Picture Field -->
             <div class="form-group">
                 <label>Profile Picture:</label>
                 <input type="file" name="profile_pic" accept="image/*">
@@ -195,7 +172,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
             </div>
 
-            <!-- Submit Button -->
             <button type="submit">Register</button>
         </form>
         <p>Already have an account? <a href="login.php">Login here</a></p>
@@ -203,6 +179,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </body>
 </html>
 <?php
-// Clear errors and old input after displaying them
 unset($_SESSION['errors'], $_SESSION['old']);
 ?>

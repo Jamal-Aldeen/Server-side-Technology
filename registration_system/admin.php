@@ -1,44 +1,35 @@
 <?php
 session_start();
 
-// Redirect if not admin
 if (!isset($_SESSION['admin'])) {
     header('Location: login.php');
     exit();
 }
 
-// Handle user deletion
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
     $email = $_POST['email'];
 
-    // Read all users from the file
     $users = file('users.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-    // Find the user to delete
     foreach ($users as $key => $user_json) {
         $user = json_decode($user_json, true);
         if ($user['email'] === $email) {
-            // Delete the user's photo file
             if (file_exists($user['profile_pic'])) {
-                unlink($user['profile_pic']); // Delete the file
+                unlink($user['profile_pic']); 
             }
 
-            // Remove the user from the array
             unset($users[$key]);
             break;
         }
     }
 
-    // Save the updated users list back to the file
     file_put_contents('users.txt', implode(PHP_EOL, $users));
 
-    // Set a success message
     $_SESSION['message'] = "User and their photo deleted successfully";
     header('Location: admin.php');
     exit();
 }
 
-// Get all users
 $users = file('users.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 ?>
 <!DOCTYPE html>
