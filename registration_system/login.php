@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+// Define the secret key directly in the file
+define('SECRET_KEY', 'd4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4'); // Replace with your generated key
+
 // Redirect to welcome page if user is already logged in
 if (isset($_SESSION['user'])) {
     header('Location: welcome.php');
@@ -22,10 +25,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $users = file('users.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($users as $user_json) {
         $user = json_decode($user_json, true);
-        if ($user['email'] === $email && password_verify($password, $user['password'])) {
-            $_SESSION['user'] = $user;
-            header('Location: welcome.php');
-            exit();
+        if ($user['email'] === $email) {
+            // Hash the input password with the secret key
+            $hashed_password = hash_hmac('sha256', $password, SECRET_KEY);
+
+            // Compare the hashed passwords
+            if ($hashed_password === $user['password']) {
+                $_SESSION['user'] = $user;
+                header('Location: welcome.php');
+                exit();
+            }
         }
     }
 
